@@ -7,9 +7,12 @@ public class CharacterAnimation : MonoBehaviour
     public CharacterStatus characterStatus;
     public void AnimationUpdate()
     {
+        animator.SetBool("AimingMove", characterStatus.isAimingMove);
         animator.SetBool("Sprint", characterStatus.isSprint);
         animator.SetBool("Aiming", characterStatus.isAiming);
+        animator.SetBool("Jump", characterStatus.isJump);
 
+        // Если персонаж не целится то АНИМАЦИЯ передвежения может работать
         if (!characterStatus.isAiming)
         {
             AnimationNormal();
@@ -23,6 +26,7 @@ public class CharacterAnimation : MonoBehaviour
 
         void AnimationAiming()
         {
+            // когда целимся нам нужно получать два направления vertical, horizontal
             float v = characterMovement.vertical;
             float h = characterMovement.horizontal;
 

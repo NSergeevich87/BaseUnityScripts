@@ -1,3 +1,5 @@
+//Скрипт вешается на персонажа
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +10,7 @@ public class Controller : MonoBehaviour
     public CharacterAnimation characterAnimation;
     public CharacterInput characterInput;
 
-    public void FixedUpdate()
+    public void Update ()
     {
         characterMovement.MoveUpdate();
         characterAnimation.AnimationUpdate();

@@ -1,3 +1,5 @@
+//Скрипт вешается на GameObject CameraHandler
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +16,8 @@ public class CameraHandler : MonoBehaviour
     public bool leftPivot;
     public float delta;
 
+    public Transform targetLook;
+
     public float mouseX;
     public float mouseY;
     public float smoothX;
@@ -23,12 +27,12 @@ public class CameraHandler : MonoBehaviour
     public float lookAngle;
     public float titleAngle;
 
-    void FixedUpdate ()
+    void Update ()
     {
-        FixedTick();
+        Tick();
     }
 
-    void FixedTick()
+    void Tick()
     {
         delta = Time.deltaTime;
 
@@ -37,6 +41,24 @@ public class CameraHandler : MonoBehaviour
 
         Vector3 targetPosition = Vector3.Lerp(mTransform.position, character.position, 1);
         mTransform.position = targetPosition;
+
+        TargetLook();
+    }
+
+    void TargetLook()
+    {
+        //отправим лучь на объект и в зависимости от места где будет соприкосновение - туда и отправим таргет лук
+        Ray ray = new Ray(camTrans.position, camTrans.forward * 2000);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            targetLook.position = Vector3.Lerp(targetLook.position, hit.point, Time.deltaTime * 40);
+        }
+        else
+        {
+            //если персонаж смотрит в небо
+            targetLook.position = Vector3.Lerp(targetLook.position, targetLook.transform.forward * 200, Time.deltaTime * 5);
+        }
     }
 
     void HandlePosition()
@@ -67,6 +89,7 @@ public class CameraHandler : MonoBehaviour
         pivot.localPosition = Vector3.Lerp(pivot.localPosition, newPivotPosition, t);
         camTrans.localPosition = Vector3.Lerp(camTrans.localPosition, newCameraPosition, t);
     }
+
     void HandleRotation()
     {
         mouseX = Input.GetAxis("Mouse X");
@@ -87,7 +110,7 @@ public class CameraHandler : MonoBehaviour
         Quaternion targetRot = Quaternion.Euler(0, lookAngle, 0);
         mTransform.rotation = targetRot;
 
-        titleAngle -= smoothY * cameraConfig.Y_rot_speed;
+        titleAngle -= smoothY * cameraConfig.X_rot_speed;
         titleAngle = Mathf.Clamp(titleAngle, cameraConfig.minAngle, cameraConfig.maxAngle);
         pivot.localRotation = Quaternion.Euler(titleAngle, 0, 0);
     }

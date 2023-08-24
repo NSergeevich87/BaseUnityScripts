@@ -1,3 +1,5 @@
+//Не забываем создать конфиг в тойже папке Unity (Create -> Camera -> Config)
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
